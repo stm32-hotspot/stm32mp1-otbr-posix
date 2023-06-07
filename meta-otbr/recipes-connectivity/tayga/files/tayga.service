@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: Huawei Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+[Unit]
+Description=Tayga NAT64
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/tayga --nodetach --config /etc/tayga.conf
+
+[Install]
+WantedBy=multi-user.target

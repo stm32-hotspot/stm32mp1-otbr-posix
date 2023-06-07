@@ -1,0 +1,22 @@
+[Unit]
+Descrption = init otbr 
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+Restart=always
+ExecStart=/usr/sbin/otbr_setup.sh
+RemainAfterExit=yes
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=systemctl start tayga
+
+[Service]
+Type=simple
+Restart=always
+ExecStart= systemctl start otbr-web
+
+[Install]
+WantedBy=multi-user.target

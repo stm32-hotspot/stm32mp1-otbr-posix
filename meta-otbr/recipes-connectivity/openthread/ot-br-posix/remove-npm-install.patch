@@ -1,0 +1,11 @@
+diff -Naur gitorig/src/web/web-service/frontend/CMakeLists.txt git/src/web/web-service/frontend/CMakeLists.txt
+--- a/src/web/web-service/frontend/CMakeLists.txt	2023-09-21 13:53:19.163068751 -0400
++++ b/src/web/web-service/frontend/CMakeLists.txt	2023-09-21 13:54:45.611064538 -0400
+@@ -45,7 +45,6 @@
+ 
+ add_custom_command(OUTPUT ${NPM_CSS_DEPENDENCIES} ${NPM_JS_DEPENDENCIES}
+     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/package.json .
+-    COMMAND npm install
+     DEPENDS package.json)
+ 
+ install(FILES index.html join.dialog.html

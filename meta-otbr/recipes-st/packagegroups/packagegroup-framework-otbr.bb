@@ -18,4 +18,5 @@ RDEPENDS:${PN} = " \
     rsyslog \
     ipset\
     bind \
+    tayga \
     "

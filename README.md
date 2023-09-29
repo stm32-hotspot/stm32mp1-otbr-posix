@@ -13,7 +13,7 @@ Two cases for RCP  are available  :
 
 
 ## Keywords 
-OpenThread,OTBR,WI-FI ,Internet of Things, Network, Connectivity, commissioning, CSA, Connectivity Standard Alliance, STM32MP1, P-NUCLEO-WB55 ,MATTER, CHIP, IoT.
+OpenThread, OTBR, WI-FI, Internet of Things, Network, Connectivity, commissioning, CSA, Connectivity Standard Alliance, STM32MP1, P-NUCLEO-WB55 ,MATTER, CHIP, IoT.
 
 
 ## Release note
@@ -54,40 +54,42 @@ Synchronize the local project directories with the remote repositories specified
 PC $> repo sync
 ```
 
-Initializing the OpenEmbedded build environment
+Get the STM32MP1 OTBR repository
 
+```
+PC$> git clone "https://github.com/stm32-hotspot/stm32mp1-otbr-posix.git"
+```
+
+Initializing the OpenEmbedded build environment
+- For MP15
 ```
 PC $> DISTRO=openstlinux-weston MACHINE=stm32mp1 source layers/meta-st/scripts/envsetup.sh
 ```
+
+- For MP13
+
 ```
-PC $> bitbake st-image-weston
+PC $> DISTRO=openstlinux-weston MACHINE=stm32mp13-disco source layers/meta-st/scripts/envsetup.sh
+```
+
+Prepare the Yocto layer related to OBTR
+
+```
+PC$> cp -R ../stm32mp1-otbr-posix/meta-otbr ../layers/meta-st/
 ```
 
 ```
-PC $> cd ~/stm32mp1_openthread
+PC$> bitbake-layers add-layer ../layers/meta-st/meta-otbr
 ```
 
-```
-PC$> git clone "https://github.com/stm32-hotspot/stm32mp1-otbr-posix.git" 
-```
+Build the ST32MP1 image (this might take several hours to complete depending on your network connection and your PC performance)
 
 ```
-PC$> bitbake-layers create-layer ../layers/meta-st/meta-otbr
-```
-```
-PC$> cp -r  ./meta-st-x-linux-otbr-posix/meta-otbr ./layers/meta-st/
-```
-
-```
-PC$> bitbake-layers add-layers ./layers/meta-st/meta-otbr
-```
-
-```
-PC$> bitbake  st-image-otbr
+PC$> bitbake st-image-otbr
 ```
 
 
-## Flashing the built image 
+## Flashing the built image
 
 The *build-<distro>-<machine>/tmp-glibc/deploy/images/stm32mp1* directory receives complete file system images.
 
@@ -255,11 +257,11 @@ BOARD$>  ot-ctl extpanid 1111111122222222
 ```
 
 ```
-BOARD$>  ot-ctl panid 8737
+BOARD$>  ot-ctl panid 1234
 ```
 
 ```
-BOARD$>  ot-ctl channel 14 
+BOARD$>  ot-ctl channel 15 
 ```
 
 ```

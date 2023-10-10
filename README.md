@@ -61,12 +61,13 @@ PC$> git clone "https://github.com/stm32-hotspot/stm32mp1-otbr-posix.git"
 ```
 
 Initializing the OpenEmbedded build environment
-- For MP15
+
+:computer: For MP15, the line below :computer:
 ```
 PC $> DISTRO=openstlinux-weston MACHINE=stm32mp1 source layers/meta-st/scripts/envsetup.sh
 ```
 
-- For MP13
+:computer: For MP13, the line below :computer:
 
 ```
 PC $> DISTRO=openstlinux-weston MACHINE=stm32mp13-disco source layers/meta-st/scripts/envsetup.sh
@@ -89,7 +90,7 @@ PC$> bitbake st-image-otbr
 ```
 
 
-## Flashing the built image
+## Flashing the built image (STM32MP157F-DK2)
 
 The *build-<distro>-<machine>/tmp-glibc/deploy/images/stm32mp1* directory receives complete file system images.
 
@@ -135,9 +136,9 @@ Let's flash the downloaded image on the microSD card:
 
 ![UG_IMAGE_4](Image/STM32CubePro_GUI_210_IMAGE2.png)
 
-4. Select the "Open File" tab and choose the "FlashLayout_sdcard_stm32mp157f-dk2-optee.tsv"  through this path  *build-<distro>-<machine>/tmp-glibc/deploy/images/stm32mp1/flashlayout_st-image-otbr/extensible*
+4. Select the "Open File" tab and choose the "FlashLayout_sdcard_stm32mp157f-dk2-optee.tsv"  through this path  **build-<distro>-<machine>/tmp-glibc/deploy/images/stm32mp1/flashlayout_st-image-otbr/extensible**
 
-5. Fill the *Binaries Path" by browsing to the "build-<distro>-<machine>tmp-glibc/deploy/images/stm32mp1/*
+5. Fill the "Binaries Path" by browsing to the **build-<distro>-<machine>tmp-glibc/deploy/images/stm32mp1/**
 
 ![UG_IMAGE_5](Image/STM32CubePro_GUI_210_FileSelectedOptee_IMAGE3.png)
 
@@ -145,7 +146,72 @@ command lines can be run from Terminal through USB with st-link
 
 Note: in this article, any command executed on the board (through the remote Terminal or the Wayland Terminal) starts with BOARD$> , while any command executed on the host PC starts with PC$> 
 
+## Flashing the built image(STM32MP135F-DK)
 
+The *build-openstlinux-weston-stm32mp13-diso/tmp-glibc/deploy/images/stm32mp13-disco* directory receives complete file system images.
+
+Note that the build of the Distribution Package generates the images and the Flash layout files 
+
+
+[https://wiki.stmicroelectronics.cn/stm32mpu/wiki/STM32MP157x-DKx_-_hardware_description#Boot_related_switches](https://wiki.stmicroelectronics.cn/stm32mpu/wiki/STM32MP135x-DK_-_hardware_description#Boot_related_switches)
+
+* MB1635 motherboard: STM32MP135F 11x11, PMIC, DDR3 (1)
+* USB micro-B (ST-LINK/V2-1) → PC virtual COM port and debug (11)
+* Reset button (17)
+
+![UG_IMAGE_1](Image/STM32MP13F-DK-IMAGE1.png)
+
+* MicroSD card slot (31)
+* 4x USB Type-A (host) → mouse, keyboard or USB driver (35)
+* Ethernet → Network (30, 32)
+* USB Type-C Programming port (33)
+* USB Type-C Power (5V-3A) (34)
+
+![UG_IMAGE_2](Image/STM32MP13F-DK-IMAGE2.png)
+
+Let's flash the downloaded image on the microSD card 
+* Set the boot switches to the OPEN position as in the picture below
+
+![UG_IMAGE_3](Image/STM32MP135x-DK_boot_switches_flash.png)
+
+* Connect the USB Type-C™ (OTG) port (33) to the host PC that contains the downloaded image
+* Insert the delivered microSD card into the dedicated slot (31)
+* Connect the power supply to the USB Type-C™ port (34)
+* Press the reset button (17) to reset the board
+* Launch STM32CubeProgrammer to get the GUI
+* On the top right of the window, select USB (instead of STLINK, set by default) in the connection picklist and click the "Refresh" button. The serial number is displayed if the USB is detected
+
+![UG_IMAGE_3](Image/STM32CubePro_GUI_210-IMAGE1.png)
+
+* Then click “Connect”
+
+![UG_IMAGE_4](Image/STM32CubePro_GUI_210_IMAGE2.png)
+
+* Select the "Open File" tab and choose the "FlashLayout_sdcard_stm32mp135f-dk-extensible.tsv" through this path **"build-openstlinux-weston-stm32mp13-
+diso/tmp-glibc/deploy/images/stm32mp13-disco/flashlayout_st-image-otbr/extensible"**
+* Fill the Binaries Path" by browsing to the **"build-openstlinux-weston-stm32mp13-diso/tmp-glibc/deploy/images/stm32mp13-disco”**
+
+![UG_IMAGE_5](Image/STM32CubePro_GUI_210_FileSelectedOptee_IMAGE3.png)
+
+ 
+Note: in this article, any command executed on the board (through the remote Terminal or the Wayland Terminal) starts with BOARD$> , while any command executed on the host PC starts with PC$> 
+
+## Power up the board
+
+Set the boot switches in SD Card boot mode as in the picture below
+
+:computer: STM32MP157F-DK2
+
+![UG_IMAGE_6](Image/STM32MP157x-DKx_boot_switches_microSD_card.png)
+
+:computer: STM32MP135F-DK
+
+![UG_IMAGE_7](Image/STM32MP135x-DK_boot_switches_boot.png)
+
+
+* Press the reset button (STM32MP157F-DK2 (6) and STM32MP135F-DK (17))
+* The following command lines can be run from a Terminal through USB with ST-LINK (STM32MP157F-DK2 port (5) and STM32MP135F-DK port (11))
+  
 ## Getting board IP address with Ethernet 
 
  plug in ethernet cable (7)
@@ -229,6 +295,24 @@ BOARD$> iw wlan0 link
 For more information : https://wiki.st.com/stm32mpu/wiki/How_to_setup_a_WLAN_connection
 
 ## Configuration otbr-posix on STM32MP1
+
+At first boot you must modify the /usr/bin/otbr_setup.sh as described below (remove the bold line)
+
+mydir=/usr/libexec/otbr-install/
+
+**. "${mydir}"/_initrc** <= This need to be removed
+
+. "${mydir}"/_border_routing
+
+. "${mydir}"/_otbr
+
+. "${mydir}"/_ipforward
+
+. "${mydir}"/_nat64
+
+. "${mydir}"/_dns64
+
+<br/>
 For first boot you must config otbr-agent  with this command 
 
 ```
